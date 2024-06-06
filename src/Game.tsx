@@ -101,7 +101,7 @@ function Game() {
   };
 
   return (
-    <div className="h-full p-8 text-slate-800 bg-gradient-to-r from-cyan-500 to-blue-500">
+    <div className="h-full p-8 text-slate-800 bg-gradient-to-r from-green-500 to-yellow-500">
       <h1 className="text-center text-5xl mb-4 font-display text-white">
         Tic Tac Toe Game
       </h1>
@@ -115,12 +115,12 @@ function Game() {
             />
           ))}
         </div>
-        <div className="mx-auto w-96 text-2xl text-serif">
+        <div className="mx-auto w-96 text-2xl text-serif text-center">
           <p className="text-white mt-5">
             Next Player: <span>{currentPlayer}</span>
           </p>
           <p className="text-white mt-5">
-            Player X wins: <span>{scores["X"]}</span> || Player O wins:{" "}
+            Player X wins: <span>{scores["X"]}</span> and Player O wins:{" "}
             <span>{scores["O"]}</span>
           </p>
         </div>
