@@ -1,11 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Square from "./Square";
-const INITIAL_GAME_STATE = ["x", "x", "x", "x", "x", "x", "x", "x", "x"];
+const INITIAL_GAME_STATE = ["", "", "", "", "", "", "", "", ""];
 function Game() {
   const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
+  const [currentPlayer, setCurrentPlayer] = useState("X")
 
+  useEffect(()=>{
+    changePlayer();
+  }, [gameState])
+
+  const changePlayer = () =>{
+    setCurrentPlayer(currentPlayer === "X"?"0":"X")
+  }
   const handleCellClick = (event:any) => {
-    console.log("cell clicked!!!!!", event.target.getAttribute("data-cell-index"));
+    // console.log("cell clicked!!!!!", event.target.getAttribute("data-cell-index"));
+    const cellIndex = Number(event.target.getAttribute("data-cell-index"))
+    const currentValue = gameState[cellIndex];
+    if(currentValue){
+      return
+    }
+    const NewValues = [...gameState];
+    NewValues[cellIndex] = currentPlayer;
+    setGameState(NewValues);
+    
   };
 
   return (
