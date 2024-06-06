@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import Square from "./Square";
+
+type Scores = {
+  [key: string]: number;
+};
+
 const INITIAL_GAME_STATE = ["", "", "", "", "", "", "", "", ""];
 const WINNING_COMBOS = [
   [0, 1, 2],
@@ -11,26 +16,44 @@ const WINNING_COMBOS = [
   [0, 4, 8],
   [2, 4, 6],
 ];
+const INITIAL_SCORES: Scores = { X: 0, O: 0 };
+
 function Game() {
   const [gameState, setGameState] = useState(INITIAL_GAME_STATE);
   const [currentPlayer, setCurrentPlayer] = useState("X");
-
+  const [scores, setScores] = useState(INITIAL_SCORES);
 
   useEffect(() => {
+    const storedScores = localStorage.getItem("scores");
+    if (storedScores) {
+      setScores(JSON.parse(storedScores));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (gameState === INITIAL_GAME_STATE) {
+      return;
+    }
     checkForWinner();
   }, [gameState]);
 
-  const resetBoard = () => setGameState(INITIAL_GAME_STATE)
+  const resetBoard = () => setGameState(INITIAL_GAME_STATE);
 
   const handleWin = () => {
     window.alert(`Congrats player ${currentPlayer}! You are the winner`);
-    resetBoard()
+    const newPlayerScore = scores[currentPlayer] + 1;
+    const newScores = { ...scores };
+    newScores[currentPlayer] = newPlayerScore;
+
+    setScores(newScores);
+    localStorage.setItem("scores", JSON.stringify(newScores));
+    resetBoard();
   };
 
-  const handleDraw = () =>{
+  const handleDraw = () => {
     window.alert("The game ended");
-    resetBoard()
-  }
+    resetBoard();
+  };
 
   const checkForWinner = () => {
     let roundWon = false;
@@ -53,7 +76,6 @@ function Game() {
     }
     if (roundWon) {
       setTimeout(() => handleWin(), 500);
-      window.alert(`Congrats player ${currentPlayer}! You are the winner!!!`);
       return;
     }
     if (!gameState.includes("")) {
@@ -64,7 +86,7 @@ function Game() {
   };
 
   const changePlayer = () => {
-    setCurrentPlayer(currentPlayer === "X" ? "0" : "X");
+    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   };
   const handleCellClick = (event: any) => {
     // console.log("cell clicked!!!!!", event.target.getAttribute("data-cell-index"));
@@ -93,7 +115,15 @@ function Game() {
             />
           ))}
         </div>
-        <div>Scores go here</div>
+        <div className="mx-auto w-96 text-2xl text-serif">
+          <p className="text-white mt-5">
+            Next Player: <span>{currentPlayer}</span>
+          </p>
+          <p className="text-white mt-5">
+            Player X wins: <span>{scores["X"]}</span> || Player O wins:{" "}
+            <span>{scores["O"]}</span>
+          </p>
+        </div>
       </div>
     </div>
   );
